@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: openclaw-cloud
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false  # User fills this in Dashboard
+      - key: GEMINI_API_KEY
+        value: AIzaSyA8baTPPnip8HPJ3cS8VZ29F__6tdAl8oA
+    healthCheckPath: /
+    ports:
+      - protocol: http
+        publishedPort: 80
+        targetPort: 10000

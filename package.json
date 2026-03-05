@@ -1,0 +1,17 @@
+{
+  "name": "openclaw-cloud",
+  "version": "1.0.0",
+  "description": "OpenClaw AI Agent deployed to the cloud",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "openclaw": "openclaw gateway run --bind lan --port $PORT"
+  },
+  "dependencies": {
+    "openclaw": "^2026.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
