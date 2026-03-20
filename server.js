@@ -76,7 +76,7 @@ if (!fs.existsSync(configPath)) {
 console.log(`🦞 Starting OpenClaw Gateway on port ${PORT}`);
 console.log(`🔗 Dashboard will be available at: http://0.0.0.0:${PORT}`);
 
-const openclawProcess = spawn('npx', ['openclaw', 'gateway', 'run', '--bind', 'lan', '--port', PORT], {
+const openclawProcess = spawn('npx', ['openclaw', 'gateway', 'run', '--bind', 'lan', '--port', PORT, '--allow-unconfigured'], {
   stdio: 'inherit',
   env: {
     ...process.env,
