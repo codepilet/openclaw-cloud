@@ -1,0 +1,40 @@
+#!/bin/bash
+# macOS version of Linux 'free' command
+# Shows memory usage in a Linux-like format
+
+echo "               total        used        free      shared  buff/cache   available"
+
+# Get memory info from vm_stat and system_profiler
+vm_stat_output=$(vm_stat)
+page_size=16384  # macOS page size is 16KB
+
+# Parse vm_stat output
+pages_free=$(echo "$vm_stat_output" | grep "Pages free:" | awk '{print $3}' | tr -d '.')
+pages_active=$(echo "$vm_stat_output" | grep "Pages active:" | awk '{print $3}' | tr -d '.')
+pages_inactive=$(echo "$vm_stat_output" | grep "Pages inactive:" | awk '{print $3}' | tr -d '.')
+pages_wired=$(echo "$vm_stat_output" | grep "Pages wired down:" | awk '{print $4}' | tr -d '.')
+pages_compressed=$(echo "$vm_stat_output" | grep "Pages stored in compressor:" | awk '{print $5}' | tr -d '.')
+
+# Convert pages to KB
+free_kb=$((pages_free * page_size / 1024))
+active_kb=$((pages_active * page_size / 1024))
+inactive_kb=$((pages_inactive * page_size / 1024))
+wired_kb=$((pages_wired * page_size / 1024))
+compressed_kb=$((pages_compressed * page_size / 1024))
+
+# Calculate totals
+used_kb=$((active_kb + inactive_kb + wired_kb + compressed_kb))
+total_kb=$((used_kb + free_kb))
+available_kb=$((free_kb + inactive_kb))
+
+# Convert to human readable
+printf "Mem:%12d%12d%12d%12d%12d%12d\n" \
+    $total_kb $used_kb $free_kb 0 $inactive_kb $available_kb
+
+# Show swap info if available
+swap_info=$(sysctl -n vm.swapusage 2>/dev/null || echo "total = 0.00M  used = 0.00M  free = 0.00M")
+swap_total=$(echo "$swap_info" | grep -o "total = [0-9.]*[MG]" | sed 's/total = //' | sed 's/M/000/' | sed 's/G/000000/' | sed 's/\..*//')
+swap_used=$(echo "$swap_info" | grep -o "used = [0-9.]*[MG]" | sed 's/used = //' | sed 's/M/000/' | sed 's/G/000000/' | sed 's/\..*//')
+swap_free=$(echo "$swap_info" | grep -o "free = [0-9.]*[MG]" | sed 's/free = //' | sed 's/M/000/' | sed 's/G/000000/' | sed 's/\..*//')
+
+printf "Swap:%11d%12d%12d\n" ${swap_total:-0} ${swap_used:-0} ${swap_free:-0}

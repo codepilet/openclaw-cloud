@@ -15,7 +15,7 @@ This project deploys OpenClaw to the cloud with automatic configuration and setu
 1. Push this repository to GitHub/GitLab/Bitbucket
 2. Click this link to deploy: 
    ```
-   https://dashboard.render.com/blueprint/new?repo=YOUR_REPO_URL_HERE
+   https://dashboard.render.com/blueprint/new?repo=https://github.com/codepilet/openclaw-cloud
    ```
 3. Set your `OPENAI_API_KEY` in the Render dashboard
 4. Your OpenClaw instance will be live!
